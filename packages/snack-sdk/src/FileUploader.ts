@@ -120,7 +120,7 @@ export default class FileUploader {
           return Promise.reject(e);
         }
       }
-    } catch (e) {
+    } catch (e: any) {
       const error = createError({
         message: `Failed to upload file ${path} (${e.message})`,
         fileName: path,

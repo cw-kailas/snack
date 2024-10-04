@@ -1,0 +1,22 @@
+{
+  "presets": ["next/babel"],
+  "plugins": [
+    [
+      "module-resolver",
+      {
+        "root": "./", // root should be "./" to refer to your project root
+        "alias": {
+          "@oxygen/core": "./node_modules/@oxygen/core/src", // Correct relative path
+          "@oxygen/icons": "./node_modules/@oxygen/icons",
+          "@oxygen/theme": "./node_modules/@oxygen/theme"
+        }
+      }
+    ],
+    [
+      "babel-plugin-transform-theme-classes",
+      {
+        "prefix": "o"
+      }
+    ]
+  ]
+}

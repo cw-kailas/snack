@@ -72,7 +72,7 @@ export class WantedDependencyVersions {
         this.logger?.module('fetched versioned modules for SDK', sdkVersion, versions);
         this.callback(sdkVersion, versions);
       }
-    } catch (error) {
+    } catch (error: any) {
       // Note(cedric): SDK could have changed during fetching
       if (this.sdkVersion === sdkVersion) {
         this.logger?.error(error);

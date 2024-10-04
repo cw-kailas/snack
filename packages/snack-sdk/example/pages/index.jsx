@@ -9,6 +9,7 @@ import createWorkerTransport from '../components/transports/createWorkerTranspor
 import { Button } from '../components/Button';
 import { Toolbar } from '../components/Toolbar';
 import defaults from '../components/Defaults';
+import React from 'react';
 
 const INITIAL_CODE_CHANGES_DELAY = 500;
 const VERBOSE = !!process.browser;
@@ -74,7 +75,7 @@ export default function Home() {
         <Toolbar title="Code" />
         <textarea
           className={css(styles.code)}
-          value={files['App.js'].contents as string}
+          value={files['App.js'].contents}
           onChange={(event) =>
             snack.updateFiles({
               'App.js': {
@@ -153,7 +154,7 @@ export default function Home() {
             <label>SDK Version</label>
             <select
               value={sdkVersion}
-              onChange={(event) => snack.setSDKVersion(event.target.value as SDKVersion)}>
+              onChange={(event) => snack.setSDKVersion(event.target.value)}>
               {getSupportedSDKVersions().map((ver) => (
                 <option key={ver} value={ver}>
                   {ver}

@@ -1,6 +1,6 @@
 import { SnackOptions } from 'snack-sdk';
 
-const defaults: SnackOptions = {
+const defaults = {
   codeChangesDelay: 500,
   files: {
     'App.js': {
