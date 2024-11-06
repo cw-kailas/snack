@@ -1,21 +1,18 @@
 #!/usr/bin/env bash
 
-environment=""
+# Default Redis port
+redis_port=6379
 
+# Check for options
 while :; do
   case "${1:-}" in
     -h|--help)
       echo "Usage:"
-      echo "  port-forward-redis [-e environment] [-a application]"
+      echo "  port-forward-redis"
       echo
       echo "Options:"
-      echo "  -e, --environment=ENVIRONMENT  set the environment to which to open a tunnel:"
-      echo "                                 production, staging"
+      echo "  No options are required. This script simply connects to the local Redis server on port 6379."
       exit
-      ;;
-    -e|--environment)
-      environment=$2
-      shift
       ;;
     -?*)
       echo "Error: unknown option: $1" >&2
@@ -24,28 +21,14 @@ while :; do
     *)
       break
   esac
-
   shift
 done
 
-if [ -z "$environment" ]; then
-  echo "Error: must specify an environment" >&2
-  exit 1
-fi
+echo "Connecting to local Redis server on port $redis_port..."
+# Check if the Redis server is running locally using redis-cli
+until redis-cli -p $redis_port ping | grep -q "PONG"; do
+  echo "Waiting for Redis server to be available on 127.0.01:$redis_port..."
+  sleep 1
+done
 
-# Primary endpoint IPs from https://console.cloud.google.com/memorystore/redis/locations/us-central1/instances/
-case "$environment" in
-  staging)
-    snackager_cache_memorystore_ip="10.81.199.227"
-    ;;
-  production)
-    snackager_cache_memorystore_ip="10.241.107.196"
-    ;;
-  *)
-    echo "Error: unknown environment: $environment" >&2
-    exit 1
-    ;;
-esac
-
-gcloud compute ssh --zone us-central1-f memorystore-redis-proxy -- -N -L 6379:$snackager_cache_memorystore_ip:6379 &
-until nc -w 10 -z localhost 6379; do sleep 1; done
+echo "Local Redis server is available on  127.0.0.1:$redis_port"

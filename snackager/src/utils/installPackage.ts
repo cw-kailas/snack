@@ -2,7 +2,7 @@ import path from 'path';
 
 import { spawnSafeAsync, getYarnPackagerAsync } from './installDependencies';
 import { isExternal } from '../bundler/externals';
-import logger from '../logger';
+// import logger from "./loglog"
 
 // TODO: find the typescript definitions for this package, `@types/sander` doesn't exists
 const { readFile, writeFile } = require('sander');
@@ -34,20 +34,20 @@ export default async function installPackage(
   // Rewrite file
   await writeFile(path.join(cwd, 'package.json'), JSON.stringify(pkg, undefined, 2));
 
-  const logMetadata = {
-    pkg: {
-      name: pkg.name,
-      version: pkg.version,
-    },
-  };
+  // const logMetadata = {
+  //   pkg: {
+  //     name: pkg.name,
+  //     version: pkg.version,
+  //   },
+  // };
 
-  const regularDependencies = Object.keys(pkg.dependencies || {}).map(
-    (name) => `${name}${pkg.dependencies[name] ? `@${pkg.dependencies[name]}` : ''}`,
-  );
-  logger.info(
-    { ...logMetadata, dependencies: regularDependencies },
-    `running yarn --production, dependencies: ${regularDependencies.join(', ')}`,
-  );
+//   const regularDependencies = Object.keys(pkg.dependencies || {}).map(
+//     (name) => `${name}${pkg.dependencies[name] ? `@${pkg.dependencies[name]}` : ''}`,
+//   );
+  //   logger.info(
+  //     { ...logMetadata, dependencies: regularDependencies },
+  //     `running yarn --production, dependencies: ${regularDependencies.join(', ')}`,
+  //   );
 
   const yarn = await getYarnPackagerAsync();
   const flags = [
@@ -61,9 +61,9 @@ export default async function installPackage(
   try {
     await spawnSafeAsync(yarn, [...flags], cwd);
   } catch (e) {
-    logger.warn({ pkg, error: e }, `error running yarn: ${e.message}. trying npm instead.`);
-    if (e.stdour) logger.warn({ pkg, error: e }, `  - stdout: ${e.stdout}`);
-    if (e.stderr) logger.warn({ pkg, error: e }, `  - stderr: ${e.stderr}`);
+    // logger.warn({ pkg, error: e }, `error running yarn: ${e.message}. trying npm instead.`);
+    // if (e.stdour) logger.warn({ pkg, error: e }, `  - stdout: ${e.stdout}`);
+    // if (e.stderr) logger.warn({ pkg, error: e }, `  - stderr: ${e.stderr}`);
     await spawnSafeAsync('npm', ['install', ...flags], cwd);
   }
 }

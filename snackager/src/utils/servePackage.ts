@@ -50,7 +50,7 @@ export default async function servePackage({
 
     return result;
   } catch (e) {
-    logger.error({ pkg, error: e }, `error serving package`);
+    console.log({ pkg, error: e }, `error serving package`);
     throw e;
   }
 }
