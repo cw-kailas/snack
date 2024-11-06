@@ -19,8 +19,7 @@ FROM node:${node_version}-alpine as base
 ENV NODE_OPTIONS --openssl-legacy-provider
 
 # Prepare environment variables
-ARG APP_VERSION
-ENV APP_VERSION ${APP_VERSION}
+ENV APP_VERSION 1
 
 
 # --- Development - Prepare Snackager for development

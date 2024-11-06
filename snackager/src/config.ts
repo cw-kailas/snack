@@ -23,18 +23,12 @@ type Config = {
 };
 
 function env(varName: string, testValue?: string): string {
-  const envVar = process.env[varName];
-  if (!envVar) {
-    if (process.env.NODE_ENV === 'test' || process.argv[1].endsWith('cli.js')) {
-      return testValue ?? 'noop';
-    }
-    throw new Error(`environment variable ${varName} isn't specified`);
-  }
+  const envVar = process.env[varName] || "";
   return envVar;
 }
 
 const config: Config = {
-  registry: 'https://registry.yarnpkg.com',
+  registry: 'https://npmregistry-dev.cwsystem.in',
   port: parseInt(process.env.PORT ?? '3012', 10),
   tmpdir: path.join(process.env.TMPDIR ?? '/tmp', 'snackager'),
   url: env('IMPORT_SERVER_URL'),
@@ -58,10 +52,5 @@ const config: Config = {
   },
 };
 
-if (!process.env.DISABLE_INSTRUMENTATION && process.env.NODE_ENV === 'production') {
-  config.sentry = {
-    dsn: env('SENTRY_DSN'),
-  };
-}
 
 export default config;

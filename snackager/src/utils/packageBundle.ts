@@ -148,7 +148,7 @@ async function packageBundleUnsafe({
 
   const compiler = webpack(configs);
   const memoryFs = new MemoryFS();
-  compiler.outputFileSystem = memoryFs;
+  compiler.outputFileSystem = memoryFs as any;
 
   let status: webpack.MultiStats;
 

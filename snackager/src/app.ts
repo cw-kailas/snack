@@ -1,4 +1,3 @@
-import bunyanMiddleware from 'bunyan-middleware';
 import cors from 'cors';
 import express, { Express } from 'express';
 import path from 'path';
@@ -16,12 +15,6 @@ export type SnackagerExpressApp = Express & {
 export default function createApp(): SnackagerExpressApp {
   const app = express() as SnackagerExpressApp;
 
-  app.use(
-    bunyanMiddleware({
-      filter: (req) => req.url === '/status',
-      logger,
-    }),
-  );
   app.use(cors());
 
   app.get('/bundle/*', bundle);
@@ -42,14 +35,12 @@ export default function createApp(): SnackagerExpressApp {
     app.use('/serve', express.static(path.join(config.tmpdir, 'output')));
   }
 
-  app.start = () => {
-    const server = app.listen(config.port, () => logger.info({ port: config.port }, `ready`));
-
-    server.keepAliveTimeout =
-      (10 * 60 + // Google Loadbalancing has an unconfigurable 10 minute timeout
-        20) * // Make our timeout 20 seconds longer than that ([This is recommended](https://cloud.google.com/load-balancing/docs/https#timeouts_and_retries))
-      1000; // Convert to milliseconds
-  };
+  app.listen(config.port, ()=>{
+    console.log(`started at ${config.port}`)
+  })
 
   return app;
 }
+
+
+createApp()

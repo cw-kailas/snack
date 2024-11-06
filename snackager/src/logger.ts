@@ -49,13 +49,8 @@ class LogStream {
 
 export default bunyan.createLogger({
   name: 'snackager',
-  streams: [
-    {
-      type: 'raw',
-      // @ts-ignore TODO: check if we can make the logstream compatible with a writable stream
-      stream: new LogStream(),
-    },
-  ],
+  stream: process.stdout,
+  level: 'info',
 });
 
 export function setLogFormat(format: LogFormat): void {

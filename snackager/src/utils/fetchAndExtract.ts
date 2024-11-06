@@ -2,7 +2,7 @@ import fetch from 'node-fetch';
 import path from 'path';
 import targz from 'targz';
 
-import logger from '../logger';
+// import logger from '../logger';
 import { Package } from '../types';
 
 // TODO: find the typescript definitions for this package, `@types/sander` doesn't exists
@@ -16,7 +16,7 @@ export default async function fetchAndExtract(
 ): Promise<void> {
   const url = pkg.dist.tarball;
 
-  logger.info({ pkg, url }, `fetching tarball`);
+//   logger.info({ pkg, url }, `fetching tarball`);
 
   const request = await fetch(url, {
     timeout: 10000,
@@ -29,7 +29,7 @@ export default async function fetchAndExtract(
   return new Promise((resolve, reject) => {
     write.on('error', reject);
     write.on('finish', async () => {
-      logger.info({ pkg, dir }, `extracting`);
+    //   logger.info({ pkg, dir }, `extracting`);
       targz.decompress(
         {
           src: path.join(dir, 'package.tgz'),
@@ -39,7 +39,7 @@ export default async function fetchAndExtract(
           if (err) {
             reject(err);
           } else {
-            logger.info({ pkg }, `done extracting`);
+            // logger.info({ pkg }, `done extracting`);
             resolve();
           }
         },

@@ -12,7 +12,6 @@ type Options = {
   redisClient?: RedisClient;
 };
 
-const EXPIRATION_SECONDS = 60 * 60;
 
 export default async function fetchMetadata(
   qualified: string,
@@ -28,33 +27,12 @@ export default async function fetchMetadata(
 
   // TODO: optimize when exact version is specified?
   try {
-    const redisId = `snackager/registryMetadata/${
-      scope ? `@${encodeURIComponent(`${scope}/`)}` : ''
-    }${encodeURIComponent(id)}`;
-
-    if (redisClient) {
-      const cachedResult = await new Promise<string | null>((resolve) =>
-        redisClient.get(redisId, (err, value) => {
-          if (err) {
-            resolve(null);
-          } else {
-            resolve(value);
-          }
-        }),
-      );
-
-      if (!bypassCache && cachedResult) {
-        // Metadata is cached in Redis
-        return JSON.parse(cachedResult);
-      }
-    }
-
     const url = `${config.registry}/${
       scope ? `@${encodeURIComponent(`${scope}/`)}` : ''
     }${encodeURIComponent(id)}`;
 
     // Fetch the package metadata from the registry
-    logger.info({ ...logMetadata, qualified, url }, `fetching metadata`);
+    // logger.info({ ...logMetadata, qualified, url }, `fetching metadata`);
     response = await fetch(url, {
       headers: {
         Accept: 'application/vnd.npm.install-v1+json; q=1.0, application/json; q=0.8, */*',
@@ -72,14 +50,6 @@ export default async function fetchMetadata(
 
     try {
       const json = await response.json();
-      if (redisClient) {
-        redisClient.set(redisId, JSON.stringify(json), 'EX', EXPIRATION_SECONDS);
-        logger.info(
-          logMetadata,
-          `Added package metadata ${redisId} to redis with ${EXPIRATION_SECONDS}s expiration.`,
-        );
-      }
-
       return json;
     } catch (e) {
       logger.error({ ...logMetadata, qualified, e }, `error in parsing: ${e.toString()}`);

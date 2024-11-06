@@ -1,5 +1,5 @@
 import uniq from 'lodash/uniq';
-import { snackRequireContextVirtualModuleBabelPlugin } from 'snack-require-context/snackager';
+import { snackRequireContextVirtualModuleBabelPlugin } from "../../../packages/snack-require-context/snackager"
 import TerserPlugin from 'terser-webpack-plugin';
 import webpack from 'webpack';
 

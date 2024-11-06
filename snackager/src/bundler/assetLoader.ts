@@ -51,7 +51,7 @@ const assetLoader: RawLoaderDefinitionFunction = async function (this) {
     .replace(/[^a-z0-9_]/g, '')}`;
 
   const result = await new Promise<string[]>((resolve, reject) =>
-    (this.fs as typeof fs).readdir(dirname, (err, res) => {
+    (this.fs as any).readdir(dirname, (err, res) => {
       if (err) {
         reject(err);
       } else {
@@ -75,7 +75,7 @@ const assetLoader: RawLoaderDefinitionFunction = async function (this) {
       this.addDependency(path.join(dirname, map[scale].name));
 
       return new Promise((resolve, reject) =>
-        (this.fs as typeof fs).readFile(path.join(dirname, map[scale].name), (err, res) => {
+        (this.fs as any).readFile(path.join(dirname, map[scale].name), (err, res) => {
           if (err) {
             reject(err);
           } else {
